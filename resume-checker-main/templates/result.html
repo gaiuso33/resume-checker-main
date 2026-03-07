@@ -97,6 +97,21 @@
                 <p>No additional tracked skills found outside the job requirements.</p>
             {% endif %}
         </div>
+        <div class="result-section">
+            <h5>Recommendations</h5>
+            <ul>
+                {% if missing %}
+                    <li>Highlight the most relevant skills from the job description in your resume summary.</li>
+                    <li>Add or emphasize these missing skills if you genuinely have experience with them.</li>
+                    <li>Include projects or achievements that demonstrate the required technologies.</li>
+                    <li>Use stronger job-specific keywords so your resume aligns better with the role.</li>
+                {% else %}
+                    <li>Your resume matches this role well.</li>
+                    <li>Focus on making your achievements measurable with numbers and outcomes.</li>
+                    <li>Keep your formatting clean and make your strongest projects easy to spot.</li>
+                {% endif %}
+            </ul>
+        </div>
 
         <div class="result-section">
             <h5>Skill Match Chart</h5>
@@ -136,6 +151,10 @@
 
                 {% for skill in extra_resume_skills %}
                     <input type="hidden" name="extra_resume_skills" value="{{ skill }}">
+                {% endfor %}
+
+                {% for item in recommendations %}
+                    <input type="hidden" name="recommendations" value="{{ item }}">
                 {% endfor %}
 
                 <button type="submit" class="btn btn-success">Download PDF Report</button>
