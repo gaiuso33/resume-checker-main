@@ -1,96 +1,174 @@
-# 📄 Resume Checker
+# Resume Checker
 
-A Flask-based web app that analyzes PDF resumes and scores them based on matched technical skills. The app extracts text, compares it against a list of target skills, generates a score, displays a visual chart, and even allows exporting the analysis as a downloadable PDF report.
+A simple **Flask web application** that analyzes a PDF resume and compares it against a job description to determine how well the resume matches the job requirements.
 
----
-
-## 🚀 Features
-
-- 🧠 Extracts resume content from PDF
-- 🛠️ Checks for essential tech skills like Python, Flask, SQL, etc.
-- 📊 Visual chart showing matched vs missing skills (Chart.js)
-- 🧾 Exports analysis as a clean, professional PDF (ReportLab)
-- 🎨 Clean Bootstrap UI
+The app extracts text from a resume, identifies relevant technical skills, and calculates a **match score** based on how many required skills appear in the resume.
 
 ---
 
-## 🛠️ Technologies
+## Features
 
-- Python, Flask
-- PyPDF2 – PDF parsing
-- ReportLab – PDF export
-- Chart.js – frontend chart
-- Bootstrap – UI styling
+* Upload a **PDF resume**
+* Paste a **job description**
+* Automatic **skill detection**
+* Calculates **resume-job match score**
+* Displays:
 
----
-
-## ⚙️ How to Run Locally
-
-```bash
-# 1. Clone the repo
-git clone https://github.com/gaiuso33/resume-checker.git
-cd resume-checker
-
-# 2. Create virtual environment
-python -m venv venv
-venv\Scripts\activate  # On Windows
-
-# 3. Install dependencies
-pip install -r requirements.txt
-
-# 4. Run the app
-python app.py
-````
-
-Then go to: [http://localhost:5000](http://localhost:5000)
+  * Required skills
+  * Matched skills
+  * Missing skills
+  * Additional skills found in resume
+* **Visual chart** showing skill breakdown
+* **Downloadable PDF report** of the analysis
 
 ---
 
-## 📸 Sample Output
+## Demo Workflow
 
-* **Match Score:** 80%
-* **Matched Skills:** `python`, `flask`, `sql`, `html`, `data analysis`
-* **Chart:** Bar graph showing skill distribution
-* **PDF Report:** Downloadable resume analysis
+1. Upload your resume (PDF)
+2. Paste the job description
+3. Click **Analyze Resume**
+4. View the analysis results:
+
+   * Match Score
+   * Skills breakdown
+   * Resume text extraction
+5. Download a **PDF report**
 
 ---
 
-## 📁 Folder Structure
+## Tech Stack
+
+**Backend**
+
+* Python
+* Flask
+
+**Libraries**
+
+* PyPDF2 – PDF text extraction
+* ReportLab – PDF report generation
+
+**Frontend**
+
+* HTML
+* Bootstrap 5
+* Chart.js
+
+---
+
+## Project Structure
 
 ```
 resume-checker/
 │
 ├── app.py
+├── uploads/
+│
 ├── templates/
 │   ├── index.html
-│   ├── result.html
-│   └── upload.html
-├── uploads/
-├── utils/
-│   └── resume_parser.py
+│   └── result.html
+│
 ├── static/
-│   └── (optional CSS/chart)
+│   └── style.css
+│
 └── README.md
 ```
 
 ---
+
+## Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/yourusername/resume-checker.git
+cd resume-checker
 ```
-## 📌 Future Improvements
 
-* User login (admin vs guest)
-* Save past uploads & results
-* Live skill set customization
-* Host app online (Streamlit, Render, etc.)
+Create a virtual environment:
+
+```bash
+python -m venv venv
+```
+
+Activate it:
+
+**Mac / Linux**
+
+```bash
+source venv/bin/activate
+```
+
+**Windows**
+
+```bash
+venv\Scripts\activate
+```
+
+Install dependencies:
+
+```bash
+pip install flask PyPDF2 reportlab
+```
 
 ---
 
-## 👨‍💻 Author
+## Running the App
 
-**Oluwole Qwerty**
-[GitHub](https://github.com/gaiuso33) | [LinkedIn](https://www.linkedin.com/in/oluwole-qwerty)
+Start the Flask server:
+
+```bash
+python app.py
+```
+
+Then open your browser and go to:
+
+```
+http://127.0.0.1:5000
+```
 
 ---
 
-## ⭐️ Show Your Support
-If you find this useful, star ⭐ the repo and share with friends!
+## Example Skills Detected
 
+The application currently checks for the following skills:
+
+* Python
+* Flask
+* SQL
+* Data Analysis
+* Machine Learning
+* HTML
+* CSS
+* JavaScript
+* Git
+* GitHub
+
+These can easily be expanded in `app.py`.
+
+---
+
+## Future Improvements
+
+Possible upgrades:
+
+* NLP-based skill extraction
+* Automatic job description parsing
+* Resume keyword recommendations
+* User accounts and saved analyses
+* Support for **DOCX resumes**
+* Deploy the app online
+
+---
+
+## License
+
+This project is open source and available under the **MIT License**.
+
+---
+
+## Author
+
+Built by **Oluwole** as part of a portfolio project exploring Python, 
+Flask, and resume analysis tools.
