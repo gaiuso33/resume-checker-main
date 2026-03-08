@@ -5,6 +5,13 @@ A simple **Flask web application** that analyzes a PDF resume and compares it ag
 The app extracts text from a resume, identifies relevant technical skills, and calculates a **match score** based on how many required skills appear in the resume.
 
 ---
+## Screenshots
+
+### Upload Resume
+![Upload Page](screenshots/upload-page.png)
+
+### Analysis Result
+![Result Page](screenshots/result-page.png)
 
 ## Features
 
