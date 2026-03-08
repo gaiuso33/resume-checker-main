@@ -22,9 +22,14 @@ The app extracts text from a resume, identifies relevant technical skills, and c
 * **Downloadable PDF report** of the analysis
 
 ---
+## Live Demo
+
+Try the app here:
+
+[https://resume-checker-main-1.onrender.com]
+
 
 ## Demo Workflow
-
 1. Upload your resume (PDF)
 2. Paste the job description
 3. Click **Analyze Resume**
