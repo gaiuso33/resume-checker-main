@@ -8,10 +8,10 @@ The app extracts text from a resume, identifies relevant technical skills, and c
 ## Screenshots
 
 ### Upload Resume
-![Upload Page](screenshots/upload-page.png)
+![Upload Page](screenshots/upload-page.jpg)
 
 ### Analysis Result
-![Result Page](screenshots/result-page.png)
+![Result Page](screenshots/result-page.jpg)
 
 ## Features
 
