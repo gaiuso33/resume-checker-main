@@ -97,21 +97,52 @@
                 <p>No additional tracked skills found outside the job requirements.</p>
             {% endif %}
         </div>
+
         <div class="result-section">
             <h5>Recommendations</h5>
-            <ul>
-                {% if missing %}
-                    <li>Highlight the most relevant skills from the job description in your resume summary.</li>
-                    <li>Add or emphasize these missing skills if you genuinely have experience with them.</li>
-                    <li>Include projects or achievements that demonstrate the required technologies.</li>
-                    <li>Use stronger job-specific keywords so your resume aligns better with the role.</li>
-                {% else %}
-                    <li>Your resume matches this role well.</li>
-                    <li>Focus on making your achievements measurable with numbers and outcomes.</li>
-                    <li>Keep your formatting clean and make your strongest projects easy to spot.</li>
-                {% endif %}
-            </ul>
+            {% if recommendations %}
+                <ul>
+                    {% for item in recommendations %}
+                        <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No recommendations available.</p>
+            {% endif %}
         </div>
+
+        {% if optimizer %}
+            <div class="result-section">
+                <h5>AI Resume Optimization Suggestions</h5>
+
+                {% if optimizer.feedback %}
+                    <h6 class="mt-3">Improvement Suggestions</h6>
+                    <ul>
+                        {% for item in optimizer.feedback %}
+                            <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                {% if optimizer.keywords_to_add %}
+                    <h6 class="mt-3">Suggested Keywords to Add</h6>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for keyword in optimizer.keywords_to_add %}
+                            <span class="badge bg-dark">{{ keyword }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {% if optimizer.verb_suggestions %}
+                    <h6 class="mt-3">Stronger Action Verbs</h6>
+                    <ul>
+                        {% for verb in optimizer.verb_suggestions %}
+                            <li>{{ verb }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        {% endif %}
 
         <div class="result-section">
             <h5>Skill Match Chart</h5>
@@ -124,7 +155,7 @@
         </div>
 
         <div class="result-section">
-            <h5>Extracted Resume Text</h5>
+            <h5>Extracted Resume Content</h5>
             <pre style="white-space: pre-wrap;">{{ text }}</pre>
         </div>
 
@@ -156,6 +187,20 @@
                 {% for item in recommendations %}
                     <input type="hidden" name="recommendations" value="{{ item }}">
                 {% endfor %}
+
+                {% if optimizer %}
+                    {% for item in optimizer.feedback %}
+                        <input type="hidden" name="optimizer_feedback" value="{{ item }}">
+                    {% endfor %}
+
+                    {% for keyword in optimizer.keywords_to_add %}
+                        <input type="hidden" name="optimizer_keywords" value="{{ keyword }}">
+                    {% endfor %}
+
+                    {% for verb in optimizer.verb_suggestions %}
+                        <input type="hidden" name="optimizer_verbs" value="{{ verb }}">
+                    {% endfor %}
+                {% endif %}
 
                 <button type="submit" class="btn btn-success">Download PDF Report</button>
             </form>
