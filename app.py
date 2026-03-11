@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, send_file
 from io import BytesIO
 import os
+import re
 from werkzeug.utils import secure_filename
 from PyPDF2 import PdfReader
 from reportlab.lib.pagesizes import letter
@@ -53,6 +54,22 @@ def clean_text(text):
     text = text.replace("\x00", "")
     return text.strip()
 
+def normalize_text(text):
+    text = clean_text(text).lower()
+    text = re.sub(r"[-_/]", " ", text)
+    text = re.sub(r"\s+", " ", text)
+    return text.strip()
+
+
+def skill_in_text(skill, text):
+    normalized_skill = normalize_text(skill)
+    normalized_text = normalize_text(text)
+
+    if " " in normalized_skill:
+        return normalized_skill in normalized_text
+
+    pattern = rf"\b{re.escape(normalized_skill)}\b"
+    return re.search(pattern, normalized_text) is not None
 
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -231,19 +248,16 @@ def index():
         if not extracted_text:
             return render_template("index.html", error="No readable text was found in the PDF.")
 
-        resume_text_lower = extracted_text.lower()
-        jd_text_lower = job_description.lower()
-
-        required_skills = [skill for skill in SKILLS if skill in jd_text_lower]
+        required_skills = [skill for skill in SKILLS if skill_in_text(skill, job_description)]
 
         if not required_skills:
             required_skills = SKILLS.copy()
 
-        matched = [skill for skill in required_skills if skill in resume_text_lower]
-        missing = [skill for skill in required_skills if skill not in resume_text_lower]
+        matched = [skill for skill in required_skills if skill_in_text(skill, extracted_text)]
+        missing = [skill for skill in required_skills if not skill_in_text(skill, extracted_text)]
         extra_resume_skills = [
             skill for skill in SKILLS
-            if skill in resume_text_lower and skill not in required_skills
+            if skill_in_text(skill, extracted_text) and skill not in required_skills
         ]
 
         score = round((len(matched) / len(required_skills)) * 100) if required_skills else 0
