@@ -213,6 +213,38 @@ def generate_optimizer_feedback(extracted_text, job_description, matched, missin
         "sections": sections
     }
 
+def rewrite_resume_bullets(text):
+    weak_to_strong = {
+        "built": "developed",
+        "made": "designed and implemented",
+        "helped": "collaborated on",
+        "worked on": "contributed to",
+        "did": "executed",
+        "created": "engineered",
+        "used": "leveraged",
+        "fixed": "resolved",
+        "led": "spearheaded",
+        "managed": "coordinated"
+    }
+
+    suggestions = []
+
+    lines = text.split("\n")
+
+    for line in lines:
+        line_lower = line.lower()
+
+        for weak, strong in weak_to_strong.items():
+            if weak in line_lower:
+                improved = re.sub(rf"\b{weak}\b", strong, line_lower)
+                improved = improved.capitalize()
+                suggestions.append({
+                    "original": line.strip(),
+                    "improved": improved
+                })
+                break
+
+    return suggestions
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -269,6 +301,7 @@ def index():
             missing,
             required_skills
         )
+        bullet_rewrites = rewrite_resume_bullets(extracted_text)
 
         return render_template(
             "result.html",
@@ -281,7 +314,8 @@ def index():
             score=score,
             total=len(required_skills),
             recommendations=recommendations,
-            optimizer=optimizer
+            optimizer=optimizer,
+            bullet_rewrites=bullet_rewrites,
         )
 
     return render_template("index.html")

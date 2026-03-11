@@ -94,7 +94,7 @@ resume-checker/
 Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/resume-checker.git
+git clone https://github.com/gaiuso33/resume-checker-main.git
 cd resume-checker
 ```
 

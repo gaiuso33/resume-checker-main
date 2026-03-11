@@ -144,6 +144,21 @@
             </div>
         {% endif %}
 
+        {% if bullet_rewrites %}
+            <div class="result-section">
+                <h5>Improved Resume Bullet Suggestions</h5>
+
+                <ul>
+                    {% for item in bullet_rewrites %}
+                    <li>
+                        <strong>Original:</strong> {{ item.original }} <br>
+                        <strong>Improved:</strong> {{ item.improved }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
         <div class="result-section">
             <h5>Skill Match Chart</h5>
             <canvas id="skillChart" width="400" height="200"></canvas>
