@@ -98,6 +98,20 @@ def extract_resume_sections(text):
         "skills": "skills" in text_lower,
     }
 
+def calculate_structure_score(sections):
+    total_sections = len(sections)
+    present_sections = sum(1 for present in sections.values() if present)
+    return round((present_sections / total_sections) * 100) if total_sections else 0
+
+
+def calculate_overall_score(skill_score, structure_score):
+    return round((skill_score * 0.7) + (structure_score * 0.3))
+
+
+def get_section_lists(sections):
+    present = [name.title() for name, exists in sections.items() if exists]
+    missing = [name.title() for name, exists in sections.items() if not exists]
+    return present, missing
 
 def get_stronger_action_verbs():
     return {
@@ -280,11 +294,16 @@ def index():
         if not extracted_text:
             return render_template("index.html", error="No readable text was found in the PDF.")
 
-        required_skills = [skill for skill in SKILLS if skill_in_text(skill, job_description)]
+        jd_detected_skills = extract_skills_from_jd(job_description)
 
-        if not required_skills:
-            required_skills = SKILLS.copy()
+        required_skills = [
+            skill for skill in SKILLS if skill_in_text(skill, job_description)
+        ]
 
+        required_skills.extend(jd_detected_skills)
+
+        required_skills = list(dict.fromkeys(required_skills))
+        
         matched = [skill for skill in required_skills if skill_in_text(skill, extracted_text)]
         missing = [skill for skill in required_skills if not skill_in_text(skill, extracted_text)]
         extra_resume_skills = [
@@ -301,6 +320,10 @@ def index():
             missing,
             required_skills
         )
+        resume_sections = extract_resume_sections(extracted_text)
+        structure_score = calculate_structure_score(resume_sections)
+        overall_score = calculate_overall_score(score, structure_score)
+        present_sections, missing_sections = get_section_lists(resume_sections)
         bullet_rewrites = rewrite_resume_bullets(extracted_text)
 
         return render_template(
@@ -316,9 +339,30 @@ def index():
             recommendations=recommendations,
             optimizer=optimizer,
             bullet_rewrites=bullet_rewrites,
+            structure_score=structure_score,
+            overall_score=overall_score,
+            present_sections=present_sections,
+            missing_sections=missing_sections,
         )
 
     return render_template("index.html")
+
+def extract_skills_from_jd(job_description):
+    """
+    Extract potential technology keywords from job descriptions.
+    Uses simple heuristics like capitalized words and known patterns.
+    """
+
+    potential_skills = set()
+
+    # Common tech keywords pattern
+    matches = re.findall(r"\b[A-Z][a-zA-Z0-9+#]+\b", job_description)
+
+    for word in matches:
+        if len(word) > 2:
+            potential_skills.add(word.lower())
+
+    return list(potential_skills)
 
 
 @app.route("/export/pdf", methods=["POST"])
@@ -327,6 +371,10 @@ def export_pdf():
     optimizer_keywords = request.form.getlist("optimizer_keywords")
     optimizer_verbs = request.form.getlist("optimizer_verbs")
     recommendations = request.form.getlist("recommendations")
+    structure_score = request.form.get("structure_score", "0")
+    overall_score = request.form.get("overall_score", "0")
+    present_sections = request.form.getlist("present_sections")
+    missing_sections = request.form.getlist("missing_sections")
 
     text = clean_text(request.form["text"])
     score = request.form["score"]
@@ -360,6 +408,10 @@ def export_pdf():
         f"Additional Resume Skills: {', '.join(extra_resume_skills) if extra_resume_skills else 'None'}"
     )
     write_line(f"Total Skills Checked: {total}", step=20)
+    write_line(f"Structure Score: {structure_score}%")
+    write_line(f"Overall Resume Quality: {overall_score}%")
+    write_line(f"Present Sections: {', '.join(present_sections) if present_sections else 'None'}")
+    write_line(f"Missing Sections: {', '.join(missing_sections) if missing_sections else 'None'}", step=20)
 
     if recommendations:
         write_line("Recommendations:", font="Helvetica-Bold", size=12, step=18)

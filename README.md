@@ -15,20 +15,17 @@ The app extracts text from a resume, identifies relevant technical skills, and c
 
 ## Features
 
-* Upload a **PDF resume**
-* Paste a **job description**
-* Automatic **skill detection**
-* Calculates **resume-job match score**
-* Displays:
+- Upload and analyze PDF resumes
+- Compare resumes against job descriptions
+- Skill match scoring
+- Missing skill detection
+- Resume improvement recommendations
+- Resume structure analysis
+- Action verb enhancement suggestions
+- Resume bullet rewriting suggestions
+- Visual skill match chart
+- Downloadable PDF analysis report
 
-  * Required skills
-  * Matched skills
-  * Missing skills
-  * Additional skills found in resume
-* **Visual chart** showing skill breakdown
-* **Downloadable PDF report** of the analysis
-
----
 ## Live Demo
 
 Try the app here:

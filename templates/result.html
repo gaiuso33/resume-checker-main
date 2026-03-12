@@ -45,9 +45,89 @@
                 {{ score }}%
             </div>
         </div>
+        
+        <div class="result-section">
+        <h5>Resume Quality Breakdown</h5>
+
+        <p><strong>Skill Match Score:</strong> {{ score }}%</p>
+        <div class="progress mb-3" style="height: 20px;">
+            <div
+                class="progress-bar bg-success"
+                role="progressbar"
+                style="width: {{ score }}%;"
+                aria-valuenow="{{ score }}"
+                aria-valuemin="0"
+                aria-valuemax="100"
+            >
+                {{ score }}%
+            </div>
+        </div>
+
+        <p><strong>Structure Score:</strong> {{ structure_score }}%</p>
+        <div class="progress mb-3" style="height: 20px;">
+            <div
+                class="progress-bar bg-info"
+                role="progressbar"
+                style="width: {{ structure_score }}%;"
+                aria-valuenow="{{ structure_score }}"
+                aria-valuemin="0"
+                aria-valuemax="100"
+            >
+                {{ structure_score }}%
+            </div>
+        </div>
+
+        <p><strong>Overall Resume Quality:</strong> {{ overall_score }}%</p>
+        <div class="progress" style="height: 20px;">
+            <div
+                class="progress-bar bg-primary"
+                role="progressbar"
+                style="width: {{ overall_score }}%;"
+                aria-valuenow="{{ overall_score }}"
+                aria-valuemin="0"
+                aria-valuemax="100"
+            >
+                {{ overall_score }}%
+            </div>
+        </div>
+    </div>
+
+    <div class="result-section">
+        <h5>Resume Structure Analysis</h5>
+
+        <div class="mb-3">
+            <h6>Present Sections</h6>
+            {% if present_sections %}
+                <div class="d-flex flex-wrap gap-2">
+                    {% for section in present_sections %}
+                        <span class="badge bg-success">{{ section }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>No key sections detected.</p>
+            {% endif %}
+        </div>
+
+        <div>
+            <h6>Missing Sections</h6>
+            {% if missing_sections %}
+                <div class="d-flex flex-wrap gap-2">
+                    {% for section in missing_sections %}
+                        <span class="badge bg-danger">{{ section }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>All key sections are present.</p>
+            {% endif %}
+        </div>
+    </div>
+        
 
         <div class="result-section">
             <h5>Required Skills From Job Description</h5>
+            <h6 class="mt-2 text-muted">
+                Detected automatically from job description
+            </h6>
             {% if required_skills %}
                 <div class="d-flex flex-wrap gap-2">
                     {% for skill in required_skills %}
@@ -182,7 +262,17 @@
                 <input type="hidden" name="text" value="{{ text }}">
                 <input type="hidden" name="job_description" value="{{ job_description }}">
                 <input type="hidden" name="total" value="{{ total }}">
+                <input type="hidden" name="structure_score" value="{{ structure_score }}">
+                <input type="hidden" name="overall_score" value="{{ overall_score }}">
 
+                {% for section in present_sections %}
+                    <input type="hidden" name="present_sections" value="{{ section }}">
+                {% endfor %}
+
+                {% for section in missing_sections %}
+                    <input type="hidden" name="missing_sections" value="{{ section }}">
+                {% endfor %}
+                
                 {% for skill in required_skills %}
                     <input type="hidden" name="required_skills" value="{{ skill }}">
                 {% endfor %}
