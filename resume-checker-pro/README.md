@@ -2,6 +2,8 @@
 
 Resume Checker Pro is a Flask-based ATS resume analyzer that allows users to upload a resume (PDF) and compare it against a job description. It generates a match score, identifies missing skills, and provides recommendations to improve the resume.
 
+## Live demo
+[[Github pages](https://gaiuso33.github.io/resume-checker-main/)]
 ## Features
 - Upload PDF resume and extract text
 - Paste job description for comparison
