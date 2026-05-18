@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Results | Resume Checker Pro</title>
+  <title>Results | Resume Checker</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
 </head>
@@ -102,35 +102,44 @@
     </button>
 
   </div>
-
+<p class="text-gray-500 text-sm mt-6 text-center">
+            Built by Oluwole Gaius Ayokunle • Flask + TailwindCSS
+        </p>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
-const matchedCount = Number("{{ matched|length }}");
-const missingCount = Number("{{ missing|length }}");
+  const matchedCount = Number("{{ matched|length if matched else 0 }}");
+  const missingCount = Number("{{ missing|length if missing else 0 }}");
+
   const skillsCanvas = document.getElementById("skillsChart");
   const scoreCanvas = document.getElementById("scoreChart");
 
   if (skillsCanvas) {
-    new Chart(skillsCanvas, {
+    new Chart(skillsCanvas.getContext("2d"), {
       type: "pie",
       data: {
         labels: ["Matched Skills", "Missing Skills"],
         datasets: [{
-          data: [matchedCount, missingCount]
+          data: [matchedCount, missingCount],
+          backgroundColor: ["#4CAF50", "#F44336"]
         }]
       }
     });
   }
 
   if (scoreCanvas) {
-    new Chart(scoreCanvas, {
+    new Chart(scoreCanvas.getContext("2d"), {
       type: "bar",
       data: {
         labels: ["Skill Score", "Structure Score", "Overall Score"],
         datasets: [{
           label: "Score (%)",
-          data: [{{ skill_score }}, {{ structure_score }}, {{ overall_score }}]
+          data: [
+            Number("{{ skill_score|default(0) }}"),
+            Number("{{ structure_score|default(0) }}"),
+            Number("{{ overall_score|default(0) }}")
+          ],
+          backgroundColor: "#2196F3"
         }]
       },
       options: {
