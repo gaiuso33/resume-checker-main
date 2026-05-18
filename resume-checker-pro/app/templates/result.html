@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Results | Resume Checker Pro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
+</head>
+
+<body class="bg-gray-950 text-white min-h-screen p-6">
+
+  <div class="max-w-6xl mx-auto">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-3xl font-bold">Resume Results</h1>
+      <a href="/" class="text-blue-400 hover:underline">← Analyze Another Resume</a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <div class="bg-gray-900 border border-gray-800 rounded-xl p-5">
+        <h2 class="text-gray-400 text-sm">Overall Score</h2>
+        <p class="text-4xl font-bold mt-2">{{ overall_score }}%</p>
+      </div>
+
+      <div class="bg-gray-900 border border-gray-800 rounded-xl p-5">
+        <h2 class="text-gray-400 text-sm">Skill Score</h2>
+        <p class="text-4xl font-bold mt-2">{{ skill_score }}%</p>
+      </div>
+
+      <div class="bg-gray-900 border border-gray-800 rounded-xl p-5">
+        <h2 class="text-gray-400 text-sm">Structure Score</h2>
+        <p class="text-4xl font-bold mt-2">{{ structure_score }}%</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+      <div class="bg-gray-900 border border-gray-800 rounded-xl p-5">
+        <h2 class="text-xl font-semibold mb-3">Skill Match Chart</h2>
+        <canvas id="skillsChart" class="max-h-64"></canvas>
+      </div>
+
+      <div class="bg-gray-900 border border-gray-800 rounded-xl p-5">
+        <h2 class="text-xl font-semibold mb-3">Score Breakdown</h2>
+        <canvas id="scoreChart" class="max-h-64"></canvas>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+      <div class="bg-gray-900 border border-gray-800 rounded-xl p-5">
+        <h2 class="text-xl font-semibold mb-3 text-green-400">Matched Skills</h2>
+        <div class="flex flex-wrap gap-2">
+          {% for skill in matched %}
+            <span class="bg-green-600/20 border border-green-600 px-3 py-1 rounded-full text-sm">{{ skill }}</span>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="bg-gray-900 border border-gray-800 rounded-xl p-5">
+        <h2 class="text-xl font-semibold mb-3 text-red-400">Missing Skills</h2>
+        <div class="flex flex-wrap gap-2">
+          {% for skill in missing %}
+            <span class="bg-red-600/20 border border-red-600 px-3 py-1 rounded-full text-sm">{{ skill }}</span>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="bg-gray-900 border border-gray-800 rounded-xl p-5">
+        <h2 class="text-xl font-semibold mb-3 text-gray-300">Extra Skills</h2>
+        <div class="flex flex-wrap gap-2">
+          {% for skill in extra %}
+            <span class="bg-gray-700/30 border border-gray-600 px-3 py-1 rounded-full text-sm">{{ skill }}</span>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-gray-900 border border-gray-800 rounded-xl p-6 mb-10">
+      <h2 class="text-2xl font-bold mb-4">Recommendations</h2>
+      <ul class="space-y-2 text-gray-300">
+        {% for rec in recommendations %}
+          <li>• {{ rec }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="bg-gray-900 border border-gray-800 rounded-xl p-6 mb-10">
+      <h2 class="text-2xl font-bold mb-4">Bullet Improvement Suggestions</h2>
+      {% if bullet_suggestions %}
+        <ul class="space-y-2 text-gray-300">
+          {% for sug in bullet_suggestions %}
+            <li>• {{ sug }}</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-gray-400">No weak bullet phrases detected.</p>
+      {% endif %}
+    </div>
+
+    <button onclick="downloadPDF()"
+      class="w-full bg-blue-600 hover:bg-blue-700 transition text-white font-semibold p-3 rounded-lg">
+      Export PDF Report
+    </button>
+
+  </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+const matchedCount = Number("{{ matched|length }}");
+const missingCount = Number("{{ missing|length }}");
+  const skillsCanvas = document.getElementById("skillsChart");
+  const scoreCanvas = document.getElementById("scoreChart");
+
+  if (skillsCanvas) {
+    new Chart(skillsCanvas, {
+      type: "pie",
+      data: {
+        labels: ["Matched Skills", "Missing Skills"],
+        datasets: [{
+          data: [matchedCount, missingCount]
+        }]
+      }
+    });
+  }
+
+  if (scoreCanvas) {
+    new Chart(scoreCanvas, {
+      type: "bar",
+      data: {
+        labels: ["Skill Score", "Structure Score", "Overall Score"],
+        datasets: [{
+          label: "Score (%)",
+          data: [{{ skill_score }}, {{ structure_score }}, {{ overall_score }}]
+        }]
+      },
+      options: {
+        scales: {
+          y: { beginAtZero: true, max: 100 }
+        }
+      }
+    });
+  }
+
+});
+</script>
+</body>
+</html>

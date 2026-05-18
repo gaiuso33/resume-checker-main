@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resume Checker Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-950 text-white min-h-screen flex items-center justify-center p-6">
+
+    <div class="w-full max-w-4xl bg-gray-900 rounded-2xl shadow-xl p-8 border border-gray-800">
+        <h1 class="text-3xl font-bold mb-2">Resume Checker Pro</h1>
+        <p class="text-gray-400 mb-6">
+            Upload your resume and paste a job description to see how well your resume matches ATS requirements.
+        </p>
+
+        {% if error %}
+        <div class="bg-red-500/20 border border-red-500 text-red-200 p-3 rounded-lg mb-5">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data" class="space-y-6">
+
+            <div>
+                <label class="block font-semibold mb-2">Upload Resume (PDF)</label>
+                <input type="file" name="resume" accept=".pdf"
+                    class="w-full p-3 bg-gray-950 border border-gray-700 rounded-lg text-gray-200" />
+            </div>
+
+            <div>
+                <label class="block font-semibold mb-2">Paste Job Description</label>
+                <textarea name="job_description" rows="8"
+                    class="w-full p-3 bg-gray-950 border border-gray-700 rounded-lg text-gray-200"
+                    placeholder="Paste the job description here..."></textarea>
+            </div>
+
+            <button type="submit"
+                class="w-full bg-blue-600 hover:bg-blue-700 transition text-white font-semibold p-3 rounded-lg">
+                Analyze Resume
+            </button>
+        </form>
+
+        <p class="text-gray-500 text-sm mt-6 text-center">
+            Built by Oluwole Gaius Ayokunle • Flask + TailwindCSS
+        </p>
+    </div>
+    
+</body>
+
+</html>
